@@ -1,22 +1,47 @@
-// This is where we define what a "Company" looks like
-// For now, we'll use a hardcoded default company
+export interface CompanySettings {
+  defaultLeaveDays: number;
+  workHoursPerDay: number;
+  currency: string;
+  timezone: string;
+  // Add more settings as needed
+}
 
-export type Company = {
-  id: string;           // Unique ID like "comp_abc123"
-  name: string;         // Company name like "ACME Corp"
-  slug: string;         // URL slug like "acme" for acme.peoplepilot.app
-  logo?: string;        // Optional logo URL
-  primaryColor?: string; // Brand color like "#3b82f6"
-  createdAt: Date;      // When company was created
-  plan?: 'free' | 'pro' | 'enterprise'; // Subscription plan
-};
+export interface Company {
+  id: string;
+  name: string;
+  slug: string;
+  logo?: string;
+  primaryColor: string;
+  plan: 'free' | 'pro' | 'enterprise';
+  createdAt: Date;
+  updatedAt: Date;
+  settings: CompanySettings;
+}
 
-// For Phase 1 (single company mode), we'll use this hardcoded company
+export interface CompanyDocument {
+  name: string;
+  slug: string;
+  logo?: string;
+  primaryColor: string;
+  plan: 'free' | 'pro' | 'enterprise';
+  createdAt: Date;
+  updatedAt: Date;
+  settings: CompanySettings;
+}
+
+// Default company for Phase 1 (single company mode)
 export const DEFAULT_COMPANY: Company = {
   id: 'default-company',
-  name: 'Default Company',
+  name: 'PeoplePilot Demo',
   slug: 'default',
-  primaryColor: '#19a800', // Blue color
+  primaryColor: '#19A800', // Your primary color
+  plan: 'free',
   createdAt: new Date(),
-  plan: 'free'
+  updatedAt: new Date(),
+  settings: {
+    defaultLeaveDays: 12,
+    workHoursPerDay: 8,
+    currency: 'INR',
+    timezone: 'Asia/Kolkata',
+  },
 };

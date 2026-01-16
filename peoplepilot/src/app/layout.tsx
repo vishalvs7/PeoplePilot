@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google'; // Changed from Inter to Montserrat
 import './globals.css';
 import { CompanyProvider } from '@/contexts/CompanyContext';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { AppProviders } from '@/providers/AppProviders';
 
 // Configure Montserrat font
 const montserrat = Montserrat({ 
@@ -25,7 +27,11 @@ export default function RootLayout({
       <body className="font-sans">
         {/* Update DEFAULT_COMPANY color to ghost green */}
         <CompanyProvider>
+           <ErrorBoundary> {/* Add ErrorBoundary here */}
+       <AppProviders> {/* Replace individual providers */}
           {children}
+        </AppProviders>
+    </ErrorBoundary>
         </CompanyProvider>
       </body>
     </html>

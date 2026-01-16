@@ -1,51 +1,69 @@
-'use client'; // This MUST be a client component because it uses React hooks
+'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Company, DEFAULT_COMPANY } from '@/types/company';
 
-// 1. Define what data the context will provide
 interface CompanyContextType {
   company: Company;
   companyId: string;
-  setCompany?: (company: Company) => void; // Optional for Phase 2
+  loading: boolean;
 }
 
-// 2. Create the context with default values
 const CompanyContext = createContext<CompanyContextType>({
   company: DEFAULT_COMPANY,
   companyId: DEFAULT_COMPANY.id,
+  loading: true,
 });
 
-// 3. Create a custom hook to use this context
+// Export hook
 export const useCompany = () => {
   const context = useContext(CompanyContext);
-  
-  // Safety check - this shouldn't happen if we wrap our app properly
   if (!context) {
     throw new Error('useCompany must be used within a CompanyProvider');
   }
-  
   return context;
 };
 
-// 4. Create the Provider component that will wrap our app
 interface CompanyProviderProps {
   children: ReactNode;
-  company?: Company; // Optional: we can pass a real company later
 }
 
 export const CompanyProvider: React.FC<CompanyProviderProps> = ({ 
-  children, 
-  company = DEFAULT_COMPANY // Default to our hardcoded company
+  children 
 }) => {
-  // For Phase 2, we might add state here to change companies
-  // For now, it's just static
-  
+  const [loading, setLoading] = useState(true);
+
+  // SIMPLIFIED: Just use DEFAULT_COMPANY for now
+  // We'll add auth dependency back when we fix the circular issue
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const value = {
+    company: DEFAULT_COMPANY,
+    companyId: DEFAULT_COMPANY.id,
+    loading,
+  };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-2 text-sm text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <CompanyContext.Provider value={{ 
-      company, 
-      companyId: company.id 
-    }}>
+    <CompanyContext.Provider value={value}>
       {children}
     </CompanyContext.Provider>
   );
